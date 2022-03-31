@@ -76,7 +76,7 @@ namespace BetterArchery
 
     ConfigEntry<T> config<T>(string group, string name, T value, ConfigDescription description, bool synchronizedSetting = true)
     {
-      ConfigEntry<T> configEntry = config(group, name, value, description);
+      ConfigEntry<T> configEntry = Config.Bind(group, name, value, description);
 
       SyncedConfigEntry<T> syncedConfigEntry = configSync.AddConfigEntry(configEntry);
       syncedConfigEntry.SynchronizedConfig = synchronizedSetting;
@@ -85,6 +85,7 @@ namespace BetterArchery
     }
 
     ConfigEntry<T> config<T>(string group, string name, T value, string description, bool synchronizedSetting = true) => config(group, name, value, new ConfigDescription(description), synchronizedSetting);
+
     public static void Log(string str = "", int warningType = 2)
     {
       if (_DebugLevel.Value == DebugLevel.LevelNone)
@@ -101,6 +102,10 @@ namespace BetterArchery
     private void Awake()
     {
        _instance = this;
+       Assembly assembly = Assembly.GetExecutingAssembly();
+       _harmony = new(ModGUID);
+       _harmony.PatchAll(assembly);
+       
        ServerConfigLocked = config("1 - General", "Lock Configuration", true, "If on, the configuration is locked and can be changed by server admins only.");
       configQuiverEnabled = config("Quiver", "Enable Quiver", true, "(Charlie) Enable the quiver. Don't change this value while in the game. If you disable this while arrows are in the quiver, you will LOSE ALL OF THEM!");
       InventoryQuiverSlotLocation = config("Quiver", "Change location of inventory quiver slot", new Vector2(3f, -25f), "If you lower the y point, the quiver slot will go down. For More Slots you can use this location, 'x:3.0, y:-167.0'.");
@@ -151,7 +156,7 @@ namespace BetterArchery
       IsBowCrosshairVisible = config("Other", "Enable Bow Crosshair", true, "You can hide your bow crosshair, circle one.");
       ShowSneakDamage = config("Other", "Enable Sneak Damage Showing", true, "Show sneak damage at top left.");
       BowDrawMovementSpeedReductionEnabled = config("Other", "Enable Bow Draw Movement Speed Reduction", true, "Set walk speed while drawing bow.");
-      _DebugLevel = config("Other", "Set Debugging Level", DebugLevel.Level1, "Level0: Only Errors, Level1: Errors and Warnings, Level2: Everything, LevelNone: Nothing");
+      _DebugLevel = Config.Bind("Other", "Set Debugging Level", DebugLevel.Level1, "Level0: Only Errors, Level1: Errors and Warnings, Level2: Everything, LevelNone: Nothing");
       
       configSync.AddLockingConfigEntry(ServerConfigLocked);
       ArrowRetrieves.Add(new Arrow
@@ -231,7 +236,7 @@ namespace BetterArchery
         }
         assetBundle?.Unload(false);
       }
-      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
+      
     }
 
     private void OnDestroy()
