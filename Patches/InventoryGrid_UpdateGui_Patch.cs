@@ -46,7 +46,7 @@ namespace BetterArchery.Patches
       InventoryGrid __instance,
       List<InventoryGrid.Element> ___m_elements)
     {
-      /*if (Auga.API.IsLoaded())
+      if (Auga.API.IsLoaded())
       {
         List<GameObject> templist = new List<GameObject>();
         int inventoryRowIndex = BetterArchery.GetBonusInventoryRowIndex();
@@ -105,7 +105,7 @@ namespace BetterArchery.Patches
         background.localScale = new Vector3(1f, 1f, 1f);
       }
       else
-      {*/
+      {
         if ((bool) (Object) __instance.transform.parent.Find("QuiverSlotBkg"))
           return;
         int inventoryRowIndex = BetterArchery.GetBonusInventoryRowIndex();
@@ -134,7 +134,7 @@ namespace BetterArchery.Patches
           Vector2 vector2_1 = BetterArchery.InventoryQuiverSlotLocation.Value;
           Vector2 vector2_2 = new Vector2((float) x * __instance.m_elementSpace, (float) (4.0 * -(double) __instance.m_elementSpace));
           (element.m_go.transform as RectTransform).anchoredPosition = vector2_1 + vector2_2;
-        /*}*/
+        }
         
         
         RectTransform background = GetOrCreateBackground(__instance, "QuiverSlotBkg");
