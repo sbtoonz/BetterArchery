@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using Common;
 
 namespace BetterArchery.Common
 {

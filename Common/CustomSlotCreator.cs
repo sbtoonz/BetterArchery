@@ -5,7 +5,6 @@
 // Assembly location: C:\Users\mugen\Desktop\BetterArchery.dll
 
 using System.Collections.Generic;
-using Common;
 using UnityEngine;
 
 namespace BetterArchery.Common

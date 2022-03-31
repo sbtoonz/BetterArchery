@@ -4,15 +4,15 @@
 // MVID: 5341B858-EB5D-47DA-A64D-602D91E9CB5C
 // Assembly location: C:\Users\mugen\Desktop\BetterArchery.dll
 
-using BepInEx;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using BepInEx;
 using UnityEngine;
 
-namespace Common
+namespace BetterArchery.Common
 {
   public static class Utils
   {

@@ -186,3 +186,5 @@ C:\Users\mugen\RiderProjects\BetterArchery\obj\Debug\BetterArchery.csproj.CoreCo
 C:\Users\mugen\RiderProjects\BetterArchery\obj\Debug\BetterArchery.csproj.CopyComplete
 C:\Users\mugen\RiderProjects\BetterArchery\obj\Debug\BetterArchery.dll
 C:\Users\mugen\RiderProjects\BetterArchery\obj\Debug\BetterArchery.pdb
+C:\Users\mugen\RiderProjects\BetterArchery\bin\Debug\ServerSync.dll
+C:\Users\mugen\RiderProjects\BetterArchery\bin\Debug\ServerSync.pdb
