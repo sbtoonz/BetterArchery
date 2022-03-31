@@ -109,33 +109,43 @@
     </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\Assembly-CSharp_publicized.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="assembly_googleanalytics">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_googleanalytics_publicized.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="assembly_guiutils">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_guiutils_publicized.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="assembly_lux">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_lux_publicized.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="assembly_postprocessing">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_postprocessing_publicized.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="assembly_simplemeshcombine">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_simplemeshcombine_publicized.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="assembly_steamworks">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_steamworks_publicized.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="assembly_sunshafts">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_sunshafts_publicized.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="assembly_utils">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_utils_publicized.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="assembly_valheim">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_valheim_publicized.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="AugaAPI">
       <HintPath>..\..\RiderProjects\BackPacks_Remake\BackPacks\Libs\AugaAPI.dll</HintPath>

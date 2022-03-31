@@ -101,16 +101,6 @@ C:\Users\mugen\RiderProjects\BetterArchery\bin\Debug\BetterArchery.dll.config
 C:\Users\mugen\RiderProjects\BetterArchery\bin\Debug\BetterArchery.dll
 C:\Users\mugen\RiderProjects\BetterArchery\bin\Debug\BetterArchery.pdb
 C:\Users\mugen\RiderProjects\BetterArchery\bin\Debug\0Harmony.dll
-C:\Users\mugen\RiderProjects\BetterArchery\bin\Debug\Assembly-CSharp_publicized.dll
-C:\Users\mugen\RiderProjects\BetterArchery\bin\Debug\assembly_googleanalytics_publicized.dll
-C:\Users\mugen\RiderProjects\BetterArchery\bin\Debug\assembly_guiutils_publicized.dll
-C:\Users\mugen\RiderProjects\BetterArchery\bin\Debug\assembly_lux_publicized.dll
-C:\Users\mugen\RiderProjects\BetterArchery\bin\Debug\assembly_postprocessing_publicized.dll
-C:\Users\mugen\RiderProjects\BetterArchery\bin\Debug\assembly_simplemeshcombine_publicized.dll
-C:\Users\mugen\RiderProjects\BetterArchery\bin\Debug\assembly_steamworks_publicized.dll
-C:\Users\mugen\RiderProjects\BetterArchery\bin\Debug\assembly_sunshafts_publicized.dll
-C:\Users\mugen\RiderProjects\BetterArchery\bin\Debug\assembly_utils_publicized.dll
-C:\Users\mugen\RiderProjects\BetterArchery\bin\Debug\assembly_valheim_publicized.dll
 C:\Users\mugen\RiderProjects\BetterArchery\bin\Debug\AugaAPI.dll
 C:\Users\mugen\RiderProjects\BetterArchery\bin\Debug\BepInEx.dll
 C:\Users\mugen\RiderProjects\BetterArchery\bin\Debug\ExtendedItemDataFramework.dll
