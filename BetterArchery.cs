@@ -1,23 +1,17 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: 
-// Assembly: BetterArchery, Version=1.0.1.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5341B858-EB5D-47DA-A64D-602D91E9CB5C
-// Assembly location: C:\Users\mugen\Desktop\BetterArchery.dll
-
-using BepInEx;
-using BepInEx.Configuration;
-using Common;
-using HarmonyLib;
-using LitJson;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using BepInEx;
+using BepInEx.Configuration;
 using BetterArchery.Common;
+using HarmonyLib;
+using LitJson;
 using UnityEngine;
 using UnityEngine.Networking;
+using Object = UnityEngine.Object;
 
 namespace BetterArchery
 {
@@ -78,122 +72,122 @@ namespace BetterArchery
       if (_DebugLevel.Value == DebugLevel.LevelNone)
         return;
       if ((_DebugLevel.Value == DebugLevel.Level0 || _DebugLevel.Value == DebugLevel.Level1 || _DebugLevel.Value == DebugLevel.Level2) && warningType == 0)
-        Debug.LogError((object) ("[" + typeof (BetterArchery).Namespace + "]: " + str));
+        Debug.LogError("[" + typeof (BetterArchery).Namespace + "]: " + str);
       if ((_DebugLevel.Value == DebugLevel.Level1 || _DebugLevel.Value == DebugLevel.Level2) && warningType == 1)
-        Debug.LogWarning((object) ("[" + typeof (BetterArchery).Namespace + "]: " + str));
+        Debug.LogWarning("[" + typeof (BetterArchery).Namespace + "]: " + str);
       if (_DebugLevel.Value != DebugLevel.Level2 || warningType != 2)
         return;
-      Debug.Log((object) ("[" + typeof (BetterArchery).Namespace + "]: " + str));
+      Debug.Log("[" + typeof (BetterArchery).Namespace + "]: " + str);
     }
 
     private void Awake()
     {
        _instance = this;
-      configQuiverEnabled = this.Config.Bind<bool>("Quiver", "Enable Quiver", true, "(Charlie) Enable the quiver. Don't change this value while in the game. If you disable this while arrows are in the quiver, you will LOSE ALL OF THEM!");
-      InventoryQuiverSlotLocation = this.Config.Bind<Vector2>("Quiver", "Change location of inventory quiver slot", new Vector2(3f, -25f), "If you lower the y point, the quiver slot will go down. For More Slots you can use this location, 'x:3.0, y:-167.0'.");
-      QuiverHudEnabled = this.Config.Bind<bool>("Quiver", "Enable Quiver Hud", false, "(Currently, there is no hud.) Enable the quiver's squares on the screen/hud. This doesn't affect inventory.");
-      HoldingKeyCode = this.Config.Bind<KeyboardShortcut>("Quiver", "Quiver slot hotkey holding key", new KeyboardShortcut(KeyCode.LeftAlt, Array.Empty<KeyCode>()), "Change holding key. For the inputs: https://docs.unity3d.com/ScriptReference/KeyCode.html");
-      KeyCodes[0] = this.Config.Bind<KeyboardShortcut>("Quiver", "Quiver slot hotkey 1", new KeyboardShortcut(KeyCode.Alpha1, Array.Empty<KeyCode>()), "Hotkey for Quiver Slot 1. For the inputs: https://docs.unity3d.com/ScriptReference/KeyCode.html");
-      KeyCodes[1] = this.Config.Bind<KeyboardShortcut>("Quiver", "Quiver slot hotkey 2", new KeyboardShortcut(KeyCode.Alpha2, Array.Empty<KeyCode>()), "Hotkey for Quiver Slot 2. For the inputs: https://docs.unity3d.com/ScriptReference/KeyCode.html");
-      KeyCodes[2] = this.Config.Bind<KeyboardShortcut>("Quiver", "Quiver slot hotkey 3", new KeyboardShortcut(KeyCode.Alpha3, Array.Empty<KeyCode>()), "Hotkey for Quiver Slot 3. For the inputs: https://docs.unity3d.com/ScriptReference/KeyCode.html");
-      configArrowImprovementsEnabled = this.Config.Bind<bool>("Arrow Improvements", "Enable Arrow Improvements", true, "Arrow improvements including aim problems fixes, gravity changes.");
-      ArrowVelocity = this.Config.Bind<float>("Arrow Improvements", "Set Arrow Velocity", 70f, "Change the arrow's velocity. Vanilla is '60'.");
-      ArrowGravity = this.Config.Bind<float>("Arrow Improvements", "Set Arrow Gravity", 15f, "Change the arrow's gravity. Vanilla is '5'.");
-      ArrowAccuracy = this.Config.Bind<float>("Arrow Improvements", "Set Arrow Accuracy", 0.0f, "Change the arrow's accuracy. Vanilla is '-1'.");
-      ArrowAimDir = this.Config.Bind<Vector3>("Arrow Improvements", "Set Aim Direction", new Vector3(0.0f, 0.06f, 0.0f), "Change the aim direction. Vanilla is 'x:0.0, y:0.0, z: 0.0'.");
-      configBowZoomEnabled = this.Config.Bind<bool>("Bow Zoom", "Enable Bow Zoom", true, "Enable the zooming with bow.");
-      AutomaticBowZoom = this.Config.Bind<bool>("Bow Zoom", "Automatic Bow Zoom", false, "Zoom while drawing bow automatically.");
-      BowZoomSFXEnabled = this.Config.Bind<bool>("Bow Zoom", "Enable Bow Zoom SFX", true, "Sound effects for zoom-in and zoom-out.");
-      BowZoomFactor = this.Config.Bind<float>("Bow Zoom", "Zoom Factor", 2f, "Max zoom.");
-      BowZoomConstantTime = this.Config.Bind<float>("Bow Zoom", "Bow Zoom Constant Time", -1f, "Change this value to '-1' if you don't want constant time while zooming. '1' is recommended.");
-      BowZoomKey = this.Config.Bind<KeyboardShortcut>("Bow Zoom", "Bow Zoom Hotkey", new KeyboardShortcut(KeyCode.Mouse1, Array.Empty<KeyCode>()), "Mouse0: Left Click, Mouse1: Right Click, Mouse2: Middle Click. For the other inputs: https://docs.unity3d.com/ScriptReference/KeyCode.html");
-      BowDrawCancelKey = this.Config.Bind<KeyboardShortcut>("Bow Zoom", "Bow Draw Cancel Hotkey", new KeyboardShortcut(KeyCode.E, Array.Empty<KeyCode>()), "Mouse0: Left Click, Mouse1: Right Click, Mouse2: Middle Click. For the other inputs: https://docs.unity3d.com/ScriptReference/KeyCode.html");
-      StayInZoomTime = this.Config.Bind<float>("Bow Zoom", "Stay In-Zoom Time", 2f, "Set the max time of staying on zoom while holding RMB after releasing an arrow.");
-      configRetrievableArrowsEnabled = this.Config.Bind<bool>("Retrievable Arrows", "Enable Retrievable Arrows", true, "Enable the retrievable arrows.");
-      ArrowDisappearTime = this.Config.Bind<float>("Retrievable Arrows", "Arrow Disappear Time", 60f, "Set arrow's disappear countdown time.");
-      ArrowDisappearOnHit = this.Config.Bind<bool>("Retrievable Arrows", "Arrow Disappear On Hit", false, "Make arrows disappear when they are not retrievable.");
-      ArrowRetrieveOldVersion = this.Config.Bind<bool>("Retrievable Arrows", "Enable Old Retrievable Version", false, "Instantly arrow drops to the ground on hit if retrievable. Enabling this will ignore 'Arrow Disappear On Hit' and 'Arrow Disappear Time' settings.");
-      ArrowRetrieveChance[0] = this.Config.Bind<float>("Retrievable Arrows", "ArrowRetrieveChance for Wooden Arrow", 0.2f, "Example: 0.9 for 90% chance to retrieve.");
-      ArrowRetrieveChance[1] = this.Config.Bind<float>("Retrievable Arrows", "ArrowRetrieveChance for Flint Arrow", 0.3f, "Example: 0.9 for 90% chance to retrieve.");
-      ArrowRetrieveChance[2] = this.Config.Bind<float>("Retrievable Arrows", "ArrowRetrieveChance for Bronze Arrow", 0.5f, "Example: 0.9 for 90% chance to retrieve.");
-      ArrowRetrieveChance[3] = this.Config.Bind<float>("Retrievable Arrows", "ArrowRetrieveChance for Iron Arrow", 0.7f, "Example: 0.9 for 90% chance to retrieve.");
-      ArrowRetrieveChance[4] = this.Config.Bind<float>("Retrievable Arrows", "ArrowRetrieveChance for Obsidian Arrow", 0.7f, "Example: 0.9 for 90% chance to retrieve.");
-      ArrowRetrieveChance[5] = this.Config.Bind<float>("Retrievable Arrows", "ArrowRetrieveChance for Needle Arrow", 0.1f, "Example: 0.9 for 90% chance to retrieve.");
-      ArrowRetrieveChance[6] = this.Config.Bind<float>("Retrievable Arrows", "ArrowRetrieveChance for Fire Arrow", 0.0f, "Example: 0.9 for 90% chance to retrieve.");
-      ArrowRetrieveChance[7] = this.Config.Bind<float>("Retrievable Arrows", "ArrowRetrieveChance for Poison Arrow", 0.7f, "Example: 0.9 for 90% chance to retrieve.");
-      ArrowRetrieveChance[8] = this.Config.Bind<float>("Retrievable Arrows", "ArrowRetrieveChance for Silver Arrow", 0.5f, "Example: 0.9 for 90% chance to retrieve.");
-      ArrowRetrieveChance[9] = this.Config.Bind<float>("Retrievable Arrows", "ArrowRetrieveChance for Frost Arrow", 0.7f, "Example: 0.9 for 90% chance to retrieve.");
-      ArrowRetrieveSpawnType[0] = this.Config.Bind<string>("Retrievable Arrows", "ArrowRetrieveSpawnType for Wooden Arrow", "ArrowWood", "https://valheim.fandom.com/wiki/Category:Arrows use internal ids.");
-      ArrowRetrieveSpawnType[1] = this.Config.Bind<string>("Retrievable Arrows", "ArrowRetrieveSpawnType for Flint Arrow", "ArrowFlint", "https://valheim.fandom.com/wiki/Category:Arrows use internal ids.");
-      ArrowRetrieveSpawnType[2] = this.Config.Bind<string>("Retrievable Arrows", "ArrowRetrieveSpawnType for Bronze Arrow", "ArrowBronze", "https://valheim.fandom.com/wiki/Category:Arrows use internal ids.");
-      ArrowRetrieveSpawnType[3] = this.Config.Bind<string>("Retrievable Arrows", "ArrowRetrieveSpawnType for Iron Arrow", "ArrowIron", "https://valheim.fandom.com/wiki/Category:Arrows use internal ids.");
-      ArrowRetrieveSpawnType[4] = this.Config.Bind<string>("Retrievable Arrows", "ArrowRetrieveSpawnType for Obsidian Arrow", "ArrowObsidian", "https://valheim.fandom.com/wiki/Category:Arrows use internal ids.");
-      ArrowRetrieveSpawnType[5] = this.Config.Bind<string>("Retrievable Arrows", "ArrowRetrieveSpawnType for Needle Arrow", "ArrowNeedle", "https://valheim.fandom.com/wiki/Category:Arrows use internal ids.");
-      ArrowRetrieveSpawnType[6] = this.Config.Bind<string>("Retrievable Arrows", "ArrowRetrieveSpawnType for Fire Arrow", "ArrowFire", "https://valheim.fandom.com/wiki/Category:Arrows use internal ids.");
-      ArrowRetrieveSpawnType[7] = this.Config.Bind<string>("Retrievable Arrows", "ArrowRetrieveSpawnType for Poison Arrow", "ArrowObsidian", "https://valheim.fandom.com/wiki/Category:Arrows use internal ids.");
-      ArrowRetrieveSpawnType[8] = this.Config.Bind<string>("Retrievable Arrows", "ArrowRetrieveSpawnType for Silver Arrow", "ArrowSilver", "https://valheim.fandom.com/wiki/Category:Arrows use internal ids.");
-      ArrowRetrieveSpawnType[9] = this.Config.Bind<string>("Retrievable Arrows", "ArrowRetrieveSpawnType for Frost Arrow", "ArrowObsidian", "https://valheim.fandom.com/wiki/Category:Arrows use internal ids.");
-      nexusID = this.Config.Bind<int>("Other", "NexusID", 348, "Nexus mod ID for updates.");
-      IsCrosshairVisible = this.Config.Bind<bool>("Other", "Enable Crosshair", true, "You can hide your crosshair.");
-      IsBowCrosshairVisible = this.Config.Bind<bool>("Other", "Enable Bow Crosshair", true, "You can hide your bow crosshair, circle one.");
-      ShowSneakDamage = this.Config.Bind<bool>("Other", "Enable Sneak Damage Showing", true, "Show sneak damage at top left.");
-      BowDrawMovementSpeedReductionEnabled = this.Config.Bind<bool>("Other", "Enable Bow Draw Movement Speed Reduction", true, "Set walk speed while drawing bow.");
-      _DebugLevel = this.Config.Bind<DebugLevel>("Other", "Set Debugging Level", DebugLevel.Level1, "Level0: Only Errors, Level1: Errors and Warnings, Level2: Everything, LevelNone: Nothing");
-      ArrowRetrieves.Add(new Arrow()
+      configQuiverEnabled = Config.Bind("Quiver", "Enable Quiver", true, "(Charlie) Enable the quiver. Don't change this value while in the game. If you disable this while arrows are in the quiver, you will LOSE ALL OF THEM!");
+      InventoryQuiverSlotLocation = Config.Bind("Quiver", "Change location of inventory quiver slot", new Vector2(3f, -25f), "If you lower the y point, the quiver slot will go down. For More Slots you can use this location, 'x:3.0, y:-167.0'.");
+      QuiverHudEnabled = Config.Bind("Quiver", "Enable Quiver Hud", false, "(Currently, there is no hud.) Enable the quiver's squares on the screen/hud. This doesn't affect inventory.");
+      HoldingKeyCode = Config.Bind("Quiver", "Quiver slot hotkey holding key", new KeyboardShortcut(KeyCode.LeftAlt, Array.Empty<KeyCode>()), "Change holding key. For the inputs: https://docs.unity3d.com/ScriptReference/KeyCode.html");
+      KeyCodes[0] = Config.Bind("Quiver", "Quiver slot hotkey 1", new KeyboardShortcut(KeyCode.Alpha1, Array.Empty<KeyCode>()), "Hotkey for Quiver Slot 1. For the inputs: https://docs.unity3d.com/ScriptReference/KeyCode.html");
+      KeyCodes[1] = Config.Bind("Quiver", "Quiver slot hotkey 2", new KeyboardShortcut(KeyCode.Alpha2, Array.Empty<KeyCode>()), "Hotkey for Quiver Slot 2. For the inputs: https://docs.unity3d.com/ScriptReference/KeyCode.html");
+      KeyCodes[2] = Config.Bind("Quiver", "Quiver slot hotkey 3", new KeyboardShortcut(KeyCode.Alpha3, Array.Empty<KeyCode>()), "Hotkey for Quiver Slot 3. For the inputs: https://docs.unity3d.com/ScriptReference/KeyCode.html");
+      configArrowImprovementsEnabled = Config.Bind("Arrow Improvements", "Enable Arrow Improvements", true, "Arrow improvements including aim problems fixes, gravity changes.");
+      ArrowVelocity = Config.Bind("Arrow Improvements", "Set Arrow Velocity", 70f, "Change the arrow's velocity. Vanilla is '60'.");
+      ArrowGravity = Config.Bind("Arrow Improvements", "Set Arrow Gravity", 15f, "Change the arrow's gravity. Vanilla is '5'.");
+      ArrowAccuracy = Config.Bind("Arrow Improvements", "Set Arrow Accuracy", 0.0f, "Change the arrow's accuracy. Vanilla is '-1'.");
+      ArrowAimDir = Config.Bind("Arrow Improvements", "Set Aim Direction", new Vector3(0.0f, 0.06f, 0.0f), "Change the aim direction. Vanilla is 'x:0.0, y:0.0, z: 0.0'.");
+      configBowZoomEnabled = Config.Bind("Bow Zoom", "Enable Bow Zoom", true, "Enable the zooming with bow.");
+      AutomaticBowZoom = Config.Bind("Bow Zoom", "Automatic Bow Zoom", false, "Zoom while drawing bow automatically.");
+      BowZoomSFXEnabled = Config.Bind("Bow Zoom", "Enable Bow Zoom SFX", true, "Sound effects for zoom-in and zoom-out.");
+      BowZoomFactor = Config.Bind("Bow Zoom", "Zoom Factor", 2f, "Max zoom.");
+      BowZoomConstantTime = Config.Bind("Bow Zoom", "Bow Zoom Constant Time", -1f, "Change this value to '-1' if you don't want constant time while zooming. '1' is recommended.");
+      BowZoomKey = Config.Bind("Bow Zoom", "Bow Zoom Hotkey", new KeyboardShortcut(KeyCode.Mouse1, Array.Empty<KeyCode>()), "Mouse0: Left Click, Mouse1: Right Click, Mouse2: Middle Click. For the other inputs: https://docs.unity3d.com/ScriptReference/KeyCode.html");
+      BowDrawCancelKey = Config.Bind("Bow Zoom", "Bow Draw Cancel Hotkey", new KeyboardShortcut(KeyCode.E, Array.Empty<KeyCode>()), "Mouse0: Left Click, Mouse1: Right Click, Mouse2: Middle Click. For the other inputs: https://docs.unity3d.com/ScriptReference/KeyCode.html");
+      StayInZoomTime = Config.Bind("Bow Zoom", "Stay In-Zoom Time", 2f, "Set the max time of staying on zoom while holding RMB after releasing an arrow.");
+      configRetrievableArrowsEnabled = Config.Bind("Retrievable Arrows", "Enable Retrievable Arrows", true, "Enable the retrievable arrows.");
+      ArrowDisappearTime = Config.Bind("Retrievable Arrows", "Arrow Disappear Time", 60f, "Set arrow's disappear countdown time.");
+      ArrowDisappearOnHit = Config.Bind("Retrievable Arrows", "Arrow Disappear On Hit", false, "Make arrows disappear when they are not retrievable.");
+      ArrowRetrieveOldVersion = Config.Bind("Retrievable Arrows", "Enable Old Retrievable Version", false, "Instantly arrow drops to the ground on hit if retrievable. Enabling this will ignore 'Arrow Disappear On Hit' and 'Arrow Disappear Time' settings.");
+      ArrowRetrieveChance[0] = Config.Bind("Retrievable Arrows", "ArrowRetrieveChance for Wooden Arrow", 0.2f, "Example: 0.9 for 90% chance to retrieve.");
+      ArrowRetrieveChance[1] = Config.Bind("Retrievable Arrows", "ArrowRetrieveChance for Flint Arrow", 0.3f, "Example: 0.9 for 90% chance to retrieve.");
+      ArrowRetrieveChance[2] = Config.Bind("Retrievable Arrows", "ArrowRetrieveChance for Bronze Arrow", 0.5f, "Example: 0.9 for 90% chance to retrieve.");
+      ArrowRetrieveChance[3] = Config.Bind("Retrievable Arrows", "ArrowRetrieveChance for Iron Arrow", 0.7f, "Example: 0.9 for 90% chance to retrieve.");
+      ArrowRetrieveChance[4] = Config.Bind("Retrievable Arrows", "ArrowRetrieveChance for Obsidian Arrow", 0.7f, "Example: 0.9 for 90% chance to retrieve.");
+      ArrowRetrieveChance[5] = Config.Bind("Retrievable Arrows", "ArrowRetrieveChance for Needle Arrow", 0.1f, "Example: 0.9 for 90% chance to retrieve.");
+      ArrowRetrieveChance[6] = Config.Bind("Retrievable Arrows", "ArrowRetrieveChance for Fire Arrow", 0.0f, "Example: 0.9 for 90% chance to retrieve.");
+      ArrowRetrieveChance[7] = Config.Bind("Retrievable Arrows", "ArrowRetrieveChance for Poison Arrow", 0.7f, "Example: 0.9 for 90% chance to retrieve.");
+      ArrowRetrieveChance[8] = Config.Bind("Retrievable Arrows", "ArrowRetrieveChance for Silver Arrow", 0.5f, "Example: 0.9 for 90% chance to retrieve.");
+      ArrowRetrieveChance[9] = Config.Bind("Retrievable Arrows", "ArrowRetrieveChance for Frost Arrow", 0.7f, "Example: 0.9 for 90% chance to retrieve.");
+      ArrowRetrieveSpawnType[0] = Config.Bind("Retrievable Arrows", "ArrowRetrieveSpawnType for Wooden Arrow", "ArrowWood", "https://valheim.fandom.com/wiki/Category:Arrows use internal ids.");
+      ArrowRetrieveSpawnType[1] = Config.Bind("Retrievable Arrows", "ArrowRetrieveSpawnType for Flint Arrow", "ArrowFlint", "https://valheim.fandom.com/wiki/Category:Arrows use internal ids.");
+      ArrowRetrieveSpawnType[2] = Config.Bind("Retrievable Arrows", "ArrowRetrieveSpawnType for Bronze Arrow", "ArrowBronze", "https://valheim.fandom.com/wiki/Category:Arrows use internal ids.");
+      ArrowRetrieveSpawnType[3] = Config.Bind("Retrievable Arrows", "ArrowRetrieveSpawnType for Iron Arrow", "ArrowIron", "https://valheim.fandom.com/wiki/Category:Arrows use internal ids.");
+      ArrowRetrieveSpawnType[4] = Config.Bind("Retrievable Arrows", "ArrowRetrieveSpawnType for Obsidian Arrow", "ArrowObsidian", "https://valheim.fandom.com/wiki/Category:Arrows use internal ids.");
+      ArrowRetrieveSpawnType[5] = Config.Bind("Retrievable Arrows", "ArrowRetrieveSpawnType for Needle Arrow", "ArrowNeedle", "https://valheim.fandom.com/wiki/Category:Arrows use internal ids.");
+      ArrowRetrieveSpawnType[6] = Config.Bind("Retrievable Arrows", "ArrowRetrieveSpawnType for Fire Arrow", "ArrowFire", "https://valheim.fandom.com/wiki/Category:Arrows use internal ids.");
+      ArrowRetrieveSpawnType[7] = Config.Bind("Retrievable Arrows", "ArrowRetrieveSpawnType for Poison Arrow", "ArrowObsidian", "https://valheim.fandom.com/wiki/Category:Arrows use internal ids.");
+      ArrowRetrieveSpawnType[8] = Config.Bind("Retrievable Arrows", "ArrowRetrieveSpawnType for Silver Arrow", "ArrowSilver", "https://valheim.fandom.com/wiki/Category:Arrows use internal ids.");
+      ArrowRetrieveSpawnType[9] = Config.Bind("Retrievable Arrows", "ArrowRetrieveSpawnType for Frost Arrow", "ArrowObsidian", "https://valheim.fandom.com/wiki/Category:Arrows use internal ids.");
+      nexusID = Config.Bind("Other", "NexusID", 348, "Nexus mod ID for updates.");
+      IsCrosshairVisible = Config.Bind("Other", "Enable Crosshair", true, "You can hide your crosshair.");
+      IsBowCrosshairVisible = Config.Bind("Other", "Enable Bow Crosshair", true, "You can hide your bow crosshair, circle one.");
+      ShowSneakDamage = Config.Bind("Other", "Enable Sneak Damage Showing", true, "Show sneak damage at top left.");
+      BowDrawMovementSpeedReductionEnabled = Config.Bind("Other", "Enable Bow Draw Movement Speed Reduction", true, "Set walk speed while drawing bow.");
+      _DebugLevel = Config.Bind("Other", "Set Debugging Level", DebugLevel.Level1, "Level0: Only Errors, Level1: Errors and Warnings, Level2: Everything, LevelNone: Nothing");
+      ArrowRetrieves.Add(new Arrow
       {
         Name = "ArrowWood",
         SpawnChance = ArrowRetrieveChance[0].Value,
         SpawnArrow = ArrowRetrieveSpawnType[0].Value
       });
-      ArrowRetrieves.Add(new Arrow()
+      ArrowRetrieves.Add(new Arrow
       {
         Name = "ArrowFlint",
         SpawnChance = ArrowRetrieveChance[1].Value,
         SpawnArrow = ArrowRetrieveSpawnType[1].Value
       });
-      ArrowRetrieves.Add(new Arrow()
+      ArrowRetrieves.Add(new Arrow
       {
         Name = "ArrowBronze",
         SpawnChance = ArrowRetrieveChance[2].Value,
         SpawnArrow = ArrowRetrieveSpawnType[2].Value
       });
-      ArrowRetrieves.Add(new Arrow()
+      ArrowRetrieves.Add(new Arrow
       {
         Name = "ArrowIron",
         SpawnChance = ArrowRetrieveChance[3].Value,
         SpawnArrow = ArrowRetrieveSpawnType[3].Value
       });
-      ArrowRetrieves.Add(new Arrow()
+      ArrowRetrieves.Add(new Arrow
       {
         Name = "ArrowObsidian",
         SpawnChance = ArrowRetrieveChance[4].Value,
         SpawnArrow = ArrowRetrieveSpawnType[4].Value
       });
-      ArrowRetrieves.Add(new Arrow()
+      ArrowRetrieves.Add(new Arrow
       {
         Name = "ArrowNeedle",
         SpawnChance = ArrowRetrieveChance[5].Value,
         SpawnArrow = ArrowRetrieveSpawnType[5].Value
       });
-      ArrowRetrieves.Add(new Arrow()
+      ArrowRetrieves.Add(new Arrow
       {
         Name = "ArrowFire",
         SpawnChance = ArrowRetrieveChance[6].Value,
         SpawnArrow = ArrowRetrieveSpawnType[6].Value
       });
-      ArrowRetrieves.Add(new Arrow()
+      ArrowRetrieves.Add(new Arrow
       {
         Name = "ArrowPoison",
         SpawnChance = ArrowRetrieveChance[7].Value,
         SpawnArrow = ArrowRetrieveSpawnType[7].Value
       });
-      ArrowRetrieves.Add(new Arrow()
+      ArrowRetrieves.Add(new Arrow
       {
         Name = "ArrowSilver",
         SpawnChance = ArrowRetrieveChance[8].Value,
         SpawnArrow = ArrowRetrieveSpawnType[8].Value
       });
-      ArrowRetrieves.Add(new Arrow()
+      ArrowRetrieves.Add(new Arrow
       {
         Name = "ArrowFrost",
         SpawnChance = ArrowRetrieveChance[9].Value,
@@ -203,7 +197,7 @@ namespace BetterArchery
       if (configQuiverEnabled.Value)
       {
         AssetBundle assetBundle = LoadAssetBundle("quiverassets");
-        if (Recipes != null && (UnityEngine.Object) assetBundle != (UnityEngine.Object) null)
+        if (Recipes != null && assetBundle != null)
         {
           foreach (RecipeConfig recipe in Recipes.recipes)
           {
@@ -221,9 +215,9 @@ namespace BetterArchery
 
     private void OnDestroy()
     {
-      this._harmony?.UnpatchSelf();
-      foreach (UnityEngine.Object @object in Prefabs.Values)
-        UnityEngine.Object.Destroy(@object);
+      _harmony?.UnpatchSelf();
+      foreach (Object @object in Prefabs.Values)
+        Destroy(@object);
       Prefabs.Clear();
     }
 
@@ -232,7 +226,7 @@ namespace BetterArchery
       if (!configQuiverEnabled.Value)
         return;
       Player localPlayer = Player.m_localPlayer;
-      if ((UnityEngine.Object) localPlayer != (UnityEngine.Object) null && localPlayer.TakeInput())
+      if (localPlayer != null && localPlayer.TakeInput())
       {
         for (int index = 0; index < 3; ++index)
           CheckQuiverUseInput(localPlayer, index);
@@ -252,7 +246,10 @@ namespace BetterArchery
       return KeyCodes[index].Value.MainKey;
     }
 
-    public static int GetBonusInventoryRowIndex() => (UnityEngine.Object) Player.m_localPlayer != (UnityEngine.Object) null && (uint) QuiverRowIndex > 0U ? QuiverRowIndex : 0;
+    public static int GetBonusInventoryRowIndex()
+    {
+      return Player.m_localPlayer != null && (uint)QuiverRowIndex > 0U ? QuiverRowIndex : 0;
+    }
 
     public static void CheckQuiverUseInput(Player player, int index)
     {
@@ -262,7 +259,7 @@ namespace BetterArchery
       int inventoryRowIndex = GetBonusInventoryRowIndex();
       ItemDrop.ItemData itemAt = player.GetInventory().GetItemAt(index, inventoryRowIndex);
       if (itemAt != null)
-        player.UseItem((Inventory) null, itemAt, false);
+        player.UseItem(null, itemAt, false);
     }
 
     public static bool IsQuiverSlot(Vector2i pos) => IsQuiverSlot(pos.x, pos.y);
@@ -279,7 +276,7 @@ namespace BetterArchery
       return new Vector2i(index, inventoryRowIndex);
     }
 
-    public static bool IsQuiverEquipped() => !((UnityEngine.Object) Player.m_localPlayer == (UnityEngine.Object) null) && CustomSlotCreator.IsSlotOccupied((Humanoid) Player.m_localPlayer, "quiver");
+    public static bool IsQuiverEquipped() => !(Player.m_localPlayer == null) && CustomSlotCreator.IsSlotOccupied(Player.m_localPlayer, "quiver");
 
     private static T LoadJsonFile<T>(string filename) where T : class
     {
@@ -290,7 +287,7 @@ namespace BetterArchery
     private static AssetBundle LoadAssetBundle(string filename)
     {
       string assetPath = GetAssetPath(filename);
-      return !string.IsNullOrEmpty(assetPath) ? AssetBundle.LoadFromFile(assetPath) : (AssetBundle) null;
+      return !string.IsNullOrEmpty(assetPath) ? AssetBundle.LoadFromFile(assetPath) : null;
     }
 
     public static string GetAssetPath(string assetName, bool isDirectory = false)
@@ -304,7 +301,7 @@ namespace BetterArchery
           if (!Directory.Exists(path))
           {
             Log("Could not find directory (" + assetName + ").", 1);
-            return (string) null;
+            return null;
           }
         }
         return path;
@@ -315,7 +312,7 @@ namespace BetterArchery
         if (!File.Exists(path))
         {
           Log("Could not find asset (" + assetName + ").", 1);
-          return (string) null;
+          return null;
         }
       }
       return path;
@@ -323,7 +320,7 @@ namespace BetterArchery
 
     public static void TryCreateCustomSlot(ZNetScene zNetScene)
     {
-      if ((UnityEngine.Object) zNetScene == (UnityEngine.Object) null || !configQuiverEnabled.Value)
+      if (zNetScene == null || !configQuiverEnabled.Value)
         return;
       CustomSlotCreator.ApplyCustomSlotItem(zNetScene.GetPrefab("LeatherQuiver"), "quiver");
     }
@@ -353,14 +350,14 @@ namespace BetterArchery
 
     public static void PlayCustomSFX(string name, bool checkIfPlaying = true)
     {
-      if ((UnityEngine.Object) playerAudioSource == (UnityEngine.Object) null || !BowZoomSFXEnabled.Value)
+      if (playerAudioSource == null || !BowZoomSFXEnabled.Value)
         return;
       ZSFX component = playerAudioSource.GetComponent<ZSFX>();
       if (component.IsPlaying() & checkIfPlaying)
         return;
       if (customSFXDict.ContainsKey(name))
       {
-        component.m_audioClips = customSFXDict[name].Values.ToArray<AudioClip>();
+        component.m_audioClips = customSFXDict[name].Values.ToArray();
         component.Play();
       }
       else
@@ -375,7 +372,7 @@ namespace BetterArchery
       bool flag;
       using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(path, AudioType.WAV))
       {
-        yield return (object) www.SendWebRequest();
+        yield return www.SendWebRequest();
         if (www == null)
         {
           Log("ww error.", 0);
@@ -387,7 +384,7 @@ namespace BetterArchery
           if (dh != null)
           {
             AudioClip ac = dh.audioClip;
-            if ((UnityEngine.Object) ac != (UnityEngine.Object) null)
+            if (ac != null)
             {
               ac.name = Path.GetFileNameWithoutExtension(path);
               if (!dict.ContainsKey(ac.name))
@@ -396,8 +393,7 @@ namespace BetterArchery
               flag = false;
               goto label_11;
             }
-            else
-              ac = (AudioClip) null;
+            ac = null;
           }
           Log("Error while adding custom SFX.", 0);
           flag = false;
@@ -409,7 +405,7 @@ label_11:;
 
     public static void TryRegisterPrefabs(ZNetScene zNetScene)
     {
-      if ((UnityEngine.Object) zNetScene == (UnityEngine.Object) null)
+      if (zNetScene == null)
         return;
       foreach (GameObject gameObject in Prefabs.Values)
       {
@@ -418,7 +414,7 @@ label_11:;
           Log(gameObject.name);
           if (gameObject.name.Contains("Quiver"))
           {
-            Debug.Log((object) ("[PrefabCreator] " + gameObject.name + " prefab skipped."));
+            Debug.Log("[PrefabCreator] " + gameObject.name + " prefab skipped.");
             continue;
           }
         }
@@ -427,7 +423,7 @@ label_11:;
       }
     }
 
-    public static bool IsObjectDBReady() => (UnityEngine.Object) ObjectDB.instance != (UnityEngine.Object) null && ObjectDB.instance.m_items.Count != 0 && (UnityEngine.Object) ObjectDB.instance.GetItemPrefab("Amber") != (UnityEngine.Object) null;
+    public static bool IsObjectDBReady() => ObjectDB.instance != null && ObjectDB.instance.m_items.Count != 0 && ObjectDB.instance.GetItemPrefab("Amber") != null;
 
     public static void TryRegisterItems()
     {
@@ -436,11 +432,11 @@ label_11:;
       foreach (GameObject gameObject in Prefabs.Values)
       {
         ItemDrop component = gameObject.GetComponent<ItemDrop>();
-        if ((UnityEngine.Object) component != (UnityEngine.Object) null)
+        if (component != null)
         {
           if (!configQuiverEnabled.Value && component.m_itemData.m_dropPrefab.name.Contains("Quiver"))
-            Debug.Log((object) ("[PrefabCreator] Skipped prefab: " + component.m_itemData.m_dropPrefab.name));
-          else if ((UnityEngine.Object) ObjectDB.instance.GetItemPrefab(gameObject.name.GetStableHashCode()) == (UnityEngine.Object) null)
+            Debug.Log("[PrefabCreator] Skipped prefab: " + component.m_itemData.m_dropPrefab.name);
+          else if (ObjectDB.instance.GetItemPrefab(gameObject.name.GetStableHashCode()) == null)
             ObjectDB.instance.m_items.Add(gameObject);
         }
       }
@@ -454,7 +450,7 @@ label_11:;
       foreach (RecipeConfig recipe in Recipes.recipes)
       {
         if (!configQuiverEnabled.Value && recipe.item.Contains("Quiver"))
-          Debug.Log((object) ("[PrefabCreator] Skipped recipe: " + recipe.item));
+          Debug.Log("[PrefabCreator] Skipped recipe: " + recipe.item);
         else
           PrefabCreator.AddNewRecipe(recipe.name, recipe.item, recipe);
       }
