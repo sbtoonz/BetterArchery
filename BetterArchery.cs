@@ -310,11 +310,14 @@ namespace BetterArchery
       return !string.IsNullOrEmpty(assetPath) ? JsonMapper.ToObject<T>(File.ReadAllText(assetPath)) : default (T);
     }
 
-    private static AssetBundle LoadAssetBundle(string filename)
+    internal static AssetBundle? LoadAssetBundle(string bundleName)
     {
-      string assetPath = GetAssetPath(filename);
-      return !string.IsNullOrEmpty(assetPath) ? AssetBundle.LoadFromFile(assetPath) : null;
+      var resource = typeof(BetterArchery).Assembly.GetManifestResourceNames().Single
+        (s => s.EndsWith(bundleName));
+      using var stream = typeof(BetterArchery).Assembly.GetManifestResourceStream(resource);
+      return AssetBundle.LoadFromStream(stream);
     }
+
 
     public static string GetAssetPath(string assetName, bool isDirectory = false)
     {
